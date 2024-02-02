@@ -1,0 +1,92 @@
+\documentclass[sigconf,screen,9pt,english,natbib]{acmart}
+%% a4paper
+%%  \documentclass[9pt]{acmart}
+% Flag to disable all editing macros and make the document ready for
+%  submission.
+\newif\ifEditMode
+
+% Editing mode.
+% \EditModetrue
+% % Submission mode.
+% % The `submission' mode merges certain comments and edits, and removes some
+% % other notes, TODOs and remarks. For more details, refer to the `reviewing
+% % macros' in the `vusec.sty' file.
+\EditModefalse
+
+\hypersetup{
+    pdftitle={Anti-Angiogenic Therapies in the Prevention of Age-Related Macular Degeneration},
+    pdfauthor={Kaj Kowalski},
+    pdfsubject={Angiogenesis and Preventing Age-Related Macular Degeneration (AMD)},
+    pdfkeywords={Age-Related Macular Degeneration, Angiogenic Therapies, Vascular Endothelial Growth Factor, Anti-VEGF Therapy, Neovascular AMD, Non-Neovascular AMD, Wet AMD, Dry AMD, Ophthalmology, Retinal Diseases, Macular Degeneration Treatment, Intravitreal Injections, Choroidal Neovascularization, Visual Acuity, Retinal Pigment Epithelium},
+}
+
+% Define custom date or leave it commented out for today's date
+% \newcommand{\mycustomdate}{2024-02-02} % YYYY-MM-DD format
+\newcommand{\mycustomdate}{\DTMdisplaydate{2024}{2}{2}{-1}} % YYYY-MM-DD format
+
+\usepackage{vu}
+\usepackage{frontmatter}
+\usepackage{aliases}
+
+\begin{document}
+
+%% Thesis title.
+\newcommand{\thesistitle}{Anti-Angiogenic Therapies in the Prevention of Age-Related Macular Degeneration}
+\newcommand{\thesistitlemarkup}{Anti-Angiogenic Therapies in the Prevention of\break Age-Related Macular Degeneration}
+%% Author information.
+%% (Used in a couple of places, so it's better to define them in one place.)
+\newcommand{\thauthor}{Kaj Kowalski}
+\newcommand{\thauthorid}{2691390}
+\newcommand{\thauthoremail}{k.j.kowalski@student.vu.nl}
+\newcommand{\thauthoraff}{Vrije Universiteit Amsterdam}
+
+% Alternate thesis title
+% The Efficacy and Safety of Antiangiogenic Therapies in the Prevention of AMD: A Systematic Review of the Literature
+
+%% Thesis type.
+%% Valid values are `vubachelor', `csmaster', `pdcsmaster', and `litstudy'.
+%%
+\thtype{vubachelor}
+
+%% Thesis title.
+\thtitle{\thesistitlemarkup}
+
+%% Paper/thesis author.
+\thauthname{\thauthor}
+
+%% Supervisor.
+\thsvfirst{Pieter Koolwijk (\href{mailto:p.koolwijk@amsterdamumc.nl}{p.koolwijk@amsterdamumc.nl})}{dr.}
+
+%% Department.
+\thsdpt{Amsterdam UMC}
+
+%% Attach customize front matter.
+\addfrontmatter{}
+
+\title{\thesistitlemarkup}
+
+\author{\thauthor}
+\affiliation{
+  \institution{\thauthoraff}
+  \city{Amsterdam}
+  \country{The Netherlands}
+}
+\email{\thauthoremail}
+
+\input{sections/abstract-revised}
+
+\maketitle
+
+\pagestyle{plain}
+\pagenumbering{arabic}
+
+\input{sections/introduction-revised}
+\input{sections/methods-revised}
+\input{sections/results-revised-new}
+\input{sections/discussion-revised-new-new}
+\input{sections/conclusion-revised-new-new}
+\input{sections/tables/descriptor-table}
+\input{sections/references}
+\input{sections/appendices}
+
+\end{document}

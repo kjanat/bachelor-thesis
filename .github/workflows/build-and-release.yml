@@ -1,0 +1,70 @@
+name: Build and Release PDF
+
+on:
+  push:
+    branches:
+      - master
+      - main  # Also trigger on main in case you use that branch name
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write  # Needed to create releases
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: thesis.tex
+          latexmk_use_xelatex: false
+          latexmk_shell_escape: true
+          # Ensures bibliography is compiled properly
+          args: -pdf -interaction=nonstopmode -file-line-error
+      
+      - name: Get current date and time
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_OUTPUT
+      
+      - name: Get short SHA
+        id: sha
+        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: release-${{ steps.date.outputs.date }}
+          release_name: Thesis Build ${{ steps.date.outputs.date }}
+          body: |
+            Automated release of thesis PDF
+            
+            **Commit:** ${{ github.sha }}
+            **Branch:** ${{ github.ref_name }}
+            **Author:** ${{ github.actor }}
+            **Message:** ${{ github.event.head_commit.message }}
+          draft: false
+          prerelease: false
+      
+      - name: Upload PDF to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./thesis.pdf
+          asset_name: thesis-${{ steps.date.outputs.date }}-${{ steps.sha.outputs.sha }}.pdf
+          asset_content_type: application/pdf
+      
+      - name: Upload PDF as Artifact (for workflow inspection)
+        uses: actions/upload-artifact@v4
+        with:
+          name: thesis-pdf
+          path: thesis.pdf
+          retention-days: 30

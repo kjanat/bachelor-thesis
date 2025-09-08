@@ -1,0 +1,56 @@
+name: Release PDF on Tag
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers on version tags like v1.0.0, v2.1.3, etc.
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write  # Needed to create releases
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: thesis.tex
+          latexmk_use_xelatex: false
+          latexmk_shell_escape: true
+          # You can add more options if needed:
+          # latexmk_use_lualatex: true  # If you need LuaLaTeX
+          # args: -pdf -interaction=nonstopmode -file-line-error
+      
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Thesis Release ${{ github.ref_name }}
+          body: |
+            ## Thesis Release ${{ github.ref_name }}
+            
+            This is an automated release of the thesis PDF.
+            
+            **Tag:** ${{ github.ref_name }}
+            **Commit:** ${{ github.sha }}
+            **Author:** ${{ github.actor }}
+          draft: false
+          prerelease: false
+      
+      - name: Upload PDF to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./thesis.pdf
+          asset_name: thesis-${{ github.ref_name }}.pdf
+          asset_content_type: application/pdf
